@@ -1,15 +1,16 @@
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 public abstract class Transport {
 
     private final String brand;
     private final String model;
     private final double engineVolume;
-    private final List<Driver<?>> drivers = new ArrayList<>();
-    private final List<Mechanic<?>> mechanics = new ArrayList<>();
-    private final List<Sponsor> sponsors = new ArrayList<>();
+    private final Set<Driver<?>> drivers = new HashSet<>();
+    private final Set<Mechanic<?>> mechanics = new HashSet<>();
+    private final Set<Sponsor> sponsors = new HashSet<>();
 
     public Transport(String brand, String model, double engineVolume) {
         if (brand == null || brand.isEmpty()) {
@@ -42,28 +43,27 @@ public abstract class Transport {
         return engineVolume;
     }
 
-    public void addSponsor(Sponsor... sponsors) {
-        this.sponsors.addAll(Arrays.asList(sponsors));
-    }
-
-    public void addMechanic(Mechanic<?>... mechanics) {
-        this.mechanics.addAll(Arrays.asList(mechanics));
-    }
-
-    public void addDriver(Driver<?>... drivers) {
-        this.drivers.addAll(Arrays.asList(drivers));
-    }
-
-    public List<Driver<?>> getDrivers() {
+    public Set<Driver<?>> getDrivers() {
         return drivers;
     }
 
-    public List<Mechanic<?>> getMechanics() {
+    public Set<Mechanic<?>> getMechanics() {
         return mechanics;
     }
 
-    public List<Sponsor> getSponsors() {
+    public Set<Sponsor> getSponsors() {
         return sponsors;
+    }
+
+    public void addDriver(Driver<?>... driver) {
+        this.drivers.addAll(Arrays.asList(driver));
+    }
+    public void addMechanic(Mechanic<?>... mechanics) {
+        this.mechanics.addAll(Arrays.asList(mechanics));
+    }
+    public void addSponsor(Sponsor... sponsors) {
+        this.sponsors.addAll(Arrays.asList(sponsors));
+
     }
 
     public abstract void startMoving();
@@ -75,6 +75,21 @@ public abstract class Transport {
     public abstract boolean diagnostics();
 
     public abstract void fixing();
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(brand, model, engineVolume, drivers, mechanics, sponsors);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Transport)) return false;
+        Transport transport = (Transport) obj;
+        return Double.compare(transport.engineVolume, engineVolume) == 0 && brand.equals(transport.brand) &&
+                model.equals(transport.model) && Objects.equals(drivers, transport.drivers)
+                && mechanics.equals(transport.mechanics) && sponsors.equals(transport.sponsors);
+    }
 
     @Override
     public String toString() {

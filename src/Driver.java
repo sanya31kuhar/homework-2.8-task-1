@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public abstract class Driver<T extends Transport & Competing> {
 
     private final String fullName;
@@ -68,6 +70,20 @@ public abstract class Driver<T extends Transport & Competing> {
     public void driverInfo() {
         System.out.println("Водитель " + fullName + " управляет " + licenseCar.getBrand() + " " +
                 licenseCar.getModel() + " и будет участвовать в заезде");
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fullName, driverLicense, experience, licenseCar);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Driver)) return false;
+        Driver<?> driver = (Driver<?>) obj;
+        return experience == driver.experience && fullName.equals(driver.fullName) &&
+                driverLicense.equals(driver.driverLicense) && licenseCar.equals(driver.licenseCar);
     }
 
     @Override

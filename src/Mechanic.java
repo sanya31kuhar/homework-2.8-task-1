@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Mechanic<T extends Transport> {
 
     private final String name;
@@ -28,6 +30,20 @@ public class Mechanic<T extends Transport> {
 
     public void fixing(T t) {
         t.fixing();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, surname, company);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Mechanic)) return false;
+        Mechanic<?> mechanic = (Mechanic<?>) obj;
+        return Objects.equals(name, mechanic.name) && Objects.equals(surname, mechanic.surname) &&
+                Objects.equals(company, mechanic.company);
     }
 
     @Override
